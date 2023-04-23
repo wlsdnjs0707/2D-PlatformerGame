@@ -18,14 +18,18 @@ public class PlayerControl : MonoBehaviour
     // 플레이어 리지드바디
     private Rigidbody2D rb;
 
+    // bullet 프리팹
+    public GameObject bulletPrefab;
+
     // 땅 레이어
     [SerializeField]
     private LayerMask groundLayer;
 
     // 플레이어 속성
-    public float playerSpeed = 3.5f;
-    public float jumpPower = 10.0f;
+    public float playerSpeed = 5f;
+    public float jumpPower = 25.0f;
     private bool isGround = true;
+    public float shotCoolTime = 0.05f;
 
     // Start is called before the first frame update
     void Start()
@@ -74,7 +78,34 @@ public class PlayerControl : MonoBehaviour
 
     void Shot()
     {
+        GameObject bullet = Instantiate(bulletPrefab, transform.position, transform.rotation);
+        Rigidbody2D bullet_rb = bullet.GetComponent<Rigidbody2D>();
+
+        // 버튼 비활성화
+        shotButton.enabled = false;
+
+        // 쿨타임 이후 버튼 활성화 함수 지연 호출
+        Invoke("EnableShot", shotCoolTime);
+
+        // 왼쪽 바라볼 때
+        if (transform.localScale.x < 0)
+        {
+            bullet.transform.localEulerAngles = new Vector3(0, 0, 90);
+            bullet_rb.AddForce(Vector2.left * 10, ForceMode2D.Impulse);
+        }
+        else // 오른쪽 바라볼 때
+        {
+            bullet.transform.localEulerAngles = new Vector3(0, 0, 270);
+            bullet_rb.AddForce(Vector2.right * 10, ForceMode2D.Impulse);
+        }
+
+        // 5초 후 발사된 탄환 제거
+        Destroy(bullet, 5);
 
     }
 
+    void EnableShot()
+    {
+        shotButton.enabled = true;
+    }
 }

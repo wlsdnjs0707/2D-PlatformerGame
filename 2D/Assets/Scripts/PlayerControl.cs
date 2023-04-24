@@ -73,7 +73,7 @@ public class PlayerControl : MonoBehaviour
         {
             rb.velocity = Vector2.up * jumpPower;
         }
-        
+
     }
 
     void Shot()
@@ -100,7 +100,11 @@ public class PlayerControl : MonoBehaviour
         }
 
         // 5초 후 발사된 탄환 제거
-        Destroy(bullet, 5);
+        if (bullet)
+        {
+            Destroy(bullet, 5);
+        }
+        
 
     }
 
@@ -108,4 +112,5 @@ public class PlayerControl : MonoBehaviour
     {
         shotButton.enabled = true;
     }
+
 }

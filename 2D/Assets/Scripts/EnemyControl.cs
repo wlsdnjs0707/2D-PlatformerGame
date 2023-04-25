@@ -4,6 +4,7 @@ using System.Runtime.CompilerServices;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class EnemyControl : MonoBehaviour
 {
@@ -13,38 +14,38 @@ public class EnemyControl : MonoBehaviour
     // 추적할 타겟 (플레이어)
     private GameObject target;
 
-    // 공격 사거리
-    public float attackRange = 1.5f;
+    // 체력 UI
+    //public TextMeshProUGUI healthText;
+    public Image healthBarImage;
 
-    // 공격 쿨타임
-    public float attackCoolTime = 1.5f;
+    // 속성
+    private bool isGround = true; // 땅에 닿아있는가
+    private bool canTrack = true; // 플레이어를 추적중인 상태인가 (false : 추적중)
+    private bool canAttack = true; // 공격 가능한 상태인가 (false : 공격중)
+    private bool canJump = true; // 점프 가능한 상태인가 (false : 점프후 쿨타임중)
 
-    // 땅에 닿아있는지 확인
-    private bool isGround = true;
+    public float moveSpeed = 5.0f; // 이동 속도
+    public float jumpPower = 25.0f; // 점프력
+    public float attackRange = 1.5f; // 공격 사거리
+    public float attackCoolTime = 1.5f; // 공격 쿨타임
 
-    private bool canTrack = true;
-    private bool canAttack = true;
-    private bool canJump = true;
-
-    // 이동 속도
-    public float moveSpeed = 5.0f;
-
-    // 점프 파워
-    public float jumpPower = 25.0f;
+    public float life = 1000; // 체력
+    private float life_max; // 최대체력
+    public float takeDamage = 10; // 피격시 받는 데미지
 
     // Attack Effect 프리팹
     public GameObject effectPrefab_slash;
+    public GameObject effectPrefab_hit;
 
     // 땅 레이어
     [SerializeField]
     private LayerMask groundLayer;
 
-
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-
+        life_max = life;
         target = GameObject.FindWithTag("Player");
     }
 
@@ -110,18 +111,27 @@ public class EnemyControl : MonoBehaviour
             }
         }
 
+        // 현재 체력에 따라 체력 UI 조정
+        healthBarImage.fillAmount = life / life_max;
+
+        // 체력이 0 이하가 되면
+        if (life < 0)
+        {
+            Destroy(gameObject);
+            Debug.Log("Died");
+        }
+
     }
 
     void Tracking()
     {
-        // 타겟으로 이동
-        //transform.position = Vector2.MoveTowards(transform.position, target.transform.position, moveSpeed * Time.deltaTime);
+        // 타겟을 향해 이동
         this.transform.position = new Vector2(transform.position.x + ((target.transform.position - transform.position).normalized).x * moveSpeed * Time.deltaTime, transform.position.y);
     }
 
     void Attack()
     {
-        Invoke("SlashEffect", 0.5f);
+        StartCoroutine(SlashEffect());
         Invoke("EnableAttack", attackCoolTime);
     }
 
@@ -130,15 +140,17 @@ public class EnemyControl : MonoBehaviour
         // 캐릭터가 땅에 닿아있을 때만 점프 가능
         if (isGround == true)
         {
-            rb.AddForce(Vector2.up * jumpPower, ForceMode2D.Impulse);
             //rb.velocity = Vector2.up * jumpPower;
+            rb.AddForce(Vector2.up * jumpPower, ForceMode2D.Impulse);
         }
 
         Invoke("EnableJump", 2f);
     }
 
-    void SlashEffect()
+    IEnumerator SlashEffect()
     {
+        yield return new WaitForSeconds(0.5f);
+
         GameObject slashEffect = Instantiate(effectPrefab_slash, new Vector3(transform.position.x, transform.position.y, -3), transform.rotation);
         slashEffect.transform.localScale = new Vector3(1f, 1f, 1f);
 
@@ -152,7 +164,33 @@ public class EnemyControl : MonoBehaviour
             slashEffect.transform.localEulerAngles = new Vector3(0, 0, 90);
         }
 
-        Destroy(slashEffect, 1.0f);
+        Destroy(slashEffect, 0.1f);
+    }
+
+    IEnumerator HitEffect()
+    {
+        yield return null;
+
+        GameObject hitEffect = Instantiate(effectPrefab_hit, transform.position, transform.rotation);
+        hitEffect.transform.localScale = new Vector3(1f, 1f, 1f);
+
+        Destroy(hitEffect, 0.5f);
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        var obj = collision.gameObject;
+
+        if (obj.tag == "Bullet")
+        {
+            life -= takeDamage;
+
+            // 피격 이펙트 출력
+            StartCoroutine(HitEffect());
+
+            // 충돌한 오브젝트 삭제
+            Destroy(obj);
+        }
     }
 
     void EnableTracking()

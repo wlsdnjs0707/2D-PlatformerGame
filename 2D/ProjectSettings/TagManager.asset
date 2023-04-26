@@ -7,6 +7,9 @@ TagManager:
   - Enemy
   - Slash
   - Bullet
+  - StageManager
+  - HealthBar
+  - GhostCharge
   layers:
   - Default
   - TransparentFX
@@ -19,7 +22,7 @@ TagManager:
   - Enemy
   - Bullet
   - Effect
-  - 
+  - Enemy_Ghost
   - 
   - 
   - 

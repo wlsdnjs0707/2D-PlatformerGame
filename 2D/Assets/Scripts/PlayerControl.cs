@@ -8,23 +8,14 @@ using UnityEngine.UI;
 
 public class PlayerControl : MonoBehaviour
 {
-    // 조이스틱 팩
-    public FixedJoystick joy;
+    public FixedJoystick joy; // 조이스틱 팩
+    public Button jumpButton; // 점프 버튼 (A)
+    public Button shotButton; // 공격 버튼 (B)
+    public GameObject[] Life_UI; // 라이프 UI (하트)
 
-    // 점프 버튼 (A)
-    public Button jumpButton;
-
-    // 공격 버튼 (B)
-    public Button shotButton;
-
-    // 라이프 UI (하트)
-    public GameObject[] Life_UI;
-
-    // 플레이어 리지드바디
     private Rigidbody2D rb;
 
-    // bullet 프리팹
-    public GameObject bulletPrefab;
+    public GameObject bulletPrefab; // bullet 프리팹
 
     // 땅 레이어
     [SerializeField]
@@ -35,16 +26,14 @@ public class PlayerControl : MonoBehaviour
     public float jumpPower = 25.0f; // 점프력
     private bool isGround = true; // 땅 밟고있는지 확인
     private bool onHit = false; // 피격 후 무적상태 확인
-    private bool canMove = false; // 피격 후 이동가능 확인
+    private bool canMove = true; // 피격 후 이동가능 확인
     public float shotCoolTime = 0.05f; // 공격 쿨타임
     public float hitCoolTime = 1.0f; // 피격후 무적시간
-
     public int life = 5; // 라이프
 
     // Start is called before the first frame update
     void Start()
     {
-        canMove = true;
         rb = GetComponent<Rigidbody2D>();
         jumpButton.onClick.AddListener(Jump);
         shotButton.onClick.AddListener(Shot);
@@ -55,8 +44,7 @@ public class PlayerControl : MonoBehaviour
     {
         float x = joy.Horizontal;
 
-        // 바닥에 닿아있는 상태인가 확인
-        // 포인트를 기준으로 원을 그려 충돌하는 레이어를 확인
+        // 포인트를 기준으로 원을 그려 바닥 레이어에 닿아있는지 확인
         isGround = Physics2D.OverlapCircle(transform.position, 1f, groundLayer);
 
         // 이동
@@ -64,7 +52,7 @@ public class PlayerControl : MonoBehaviour
         {
             rb.velocity = new Vector2(x * playerSpeed, rb.velocity.y);
 
-            // 쳐다보는 방향 설정
+            // 바라보는 방향 설정
             if (x != 0)
             {
                 if (x < 0)
@@ -81,6 +69,7 @@ public class PlayerControl : MonoBehaviour
         // Life 소진시 게임 종료
         if (life < 1)
         {
+            // (임시)
             Time.timeScale = 0;
             canMove = false;
             jumpButton.enabled = false;
@@ -107,7 +96,7 @@ public class PlayerControl : MonoBehaviour
         // 버튼 비활성화
         shotButton.enabled = false;
 
-        // 쿨타임 이후 버튼 활성화 함수 지연 호출
+        // 쿨타임 이후 버튼 활성화
         Invoke("EnableShot", shotCoolTime);
 
         // 왼쪽 바라볼 때
@@ -129,52 +118,16 @@ public class PlayerControl : MonoBehaviour
         }
     }
 
-    void EnableShot() // 발사 쿨타임 해제
+    void EnableShot()
     {
         shotButton.enabled = true;
     }
 
-    /*private void OnTriggerEnter2D(Collider2D collision)
-    {
-        // 충돌한 오브젝트
-        var obj = collision.gameObject;
-
-        // 충돌 지점
-        Vector2 contactPoint = obj.GetComponent<Collider2D>().ClosestPoint(transform.position);
-
-        // 충돌 방향, 정규화 (1로)
-        Vector2 contactVector = (transform.position - obj.transform.position).normalized;
-
-        if (onHit == false)
-        {
-            // 피격 후 이동 불가, 무적 상태
-            canMove = false;
-            onHit = true;
-
-            if (obj.tag == "Slash")
-            {
-                Knockback(contactPoint,contactVector);
-                life -= 1;
-                Life_UI[life].SetActive(false);
-            }
-
-            // 이동 불가 해제
-            Invoke("EnableMovement", 0.3f);
-            // 무적 해제
-            Invoke("DisableOnHit", hitCoolTime);
-        }
-    }*/
-
     private void OnCollisionEnter2D(Collision2D collision) // 피격판정
     {
-        // 충돌한 오브젝트
-        var obj = collision.gameObject;
-
-        // 충돌 지점
-        Vector2 contactPoint = obj.GetComponent<Collider2D>().ClosestPoint(transform.position);
-
-        // 충돌 방향, 정규화 (1로)
-        Vector2 contactVector = (transform.position - obj.transform.position).normalized;
+        var obj = collision.gameObject; // 충돌한 오브젝트
+        Vector2 contactPoint = obj.GetComponent<Collider2D>().ClosestPoint(transform.position); // 충돌 지점 좌표
+        Vector2 contactVector = (transform.position - obj.transform.position).normalized; // 충돌 방향, 정규화 (1로)
 
         if (onHit == false)
         {
@@ -189,9 +142,14 @@ public class PlayerControl : MonoBehaviour
                 Life_UI[life].SetActive(false);
             }
 
-            // 이동 불가 해제
+            if (obj.tag == "GhostCharge")
+            {
+                Knockback(contactPoint, contactVector);
+                life -= 1;
+                Life_UI[life].SetActive(false);
+            }
+            
             Invoke("EnableMovement", 0.3f);
-            // 무적 해제
             Invoke("DisableOnHit", hitCoolTime);
         }
     }
@@ -208,7 +166,7 @@ public class PlayerControl : MonoBehaviour
 
     void Knockback(Vector2 contactPoint, Vector2 contactVector)
     {
-        // 방향 위쪽으로 추가
+        // 넉백 방향 위쪽 추가
         contactVector += Vector2.up;
 
         if (contactPoint.x > transform.position.x) // 플레이어의 오른쪽 에서 충돌할때

@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class EnemyControl : MonoBehaviour
+public class Ghost : MonoBehaviour
 {
     private Rigidbody2D rb;
     private GameObject target; // 추적할 타겟 (플레이어)
@@ -10,15 +10,15 @@ public class EnemyControl : MonoBehaviour
     private Image healthBarImage;
 
     // 속성
-    private bool isGround = true; // 땅에 닿아있는가
-    private bool canTrack = true; // 플레이어를 추적중인 상태인가 (false : 추적중)
-    private bool canAttack = true; // 공격 가능한 상태인가 (false : 공격중)
-    private bool canJump = true; // 점프 가능한 상태인가 (false : 점프 쿨타임중)
+    private bool canTrack = true; // 추적 시작 가능 여부 (false : 추적중)
+    private bool canAttack = true; // 공격 가능 여부 (false : 공격중)
+    private bool canSkill = true; // 스킬 사용 가능 여부 (false : 스킬 쿨타임중)
 
-    public float moveSpeed = 5.0f; // 이동 속도
-    public float jumpPower = 25.0f; // 점프력
-    public float attackRange = 1.5f; // 공격 사거리
-    public float attackCoolTime = 1.5f; // 공격 쿨타임
+    private float moveSpeed = 4.5f; // 이동 속도
+    private float skillSpeed = 20.0f; // 스킬 사용시 속도
+    private float attackRange = 1.5f; // 공격 사거리
+    private float skillRange = 3.0f; // 스킬 사거리
+    private float attackCoolTime = 1.5f; // 공격 쿨타임
 
     public float life = 1000.0f; // 체력
     private float life_max; // 최대체력
@@ -27,10 +27,7 @@ public class EnemyControl : MonoBehaviour
     // Attack Effect 프리팹
     public GameObject effectPrefab_slash;
     public GameObject effectPrefab_hit;
-
-    // 땅 레이어
-    [SerializeField]
-    private LayerMask groundLayer;
+    public GameObject effectPrefab_charge;
 
     // Start is called before the first frame update
     void Start()
@@ -45,10 +42,7 @@ public class EnemyControl : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        // 포인트를 기준으로 원을 그려 바닥 레이어에 닿아있는지 확인
-        isGround = Physics2D.OverlapCircle(transform.position, 1f, groundLayer);
-
-        // 플레이어와의 거리 계산
+        // 타겟과의 거리 계산
         float distance = Vector2.Distance(transform.position, target.transform.position);
 
         // 바라보는 방향 설정
@@ -64,42 +58,41 @@ public class EnemyControl : MonoBehaviour
             }
         }
 
+        // [SKILL]
+        if (distance <= skillRange)
+        {
+            if (canSkill == true)
+            {
+                canTrack = false;
+                Invoke("EnableTracking", 2.5f);
+                canAttack = false;
+                Invoke("EnableAttack", 2.5f);
+                canSkill = false;
+                Invoke("EnableSkill", 10.0f); // 스킬 쿨타임
+
+                StartCoroutine(Skill_1());
+            }
+        }
+
         // [TRACKING & ATTACK]
-        // 공격 사거리 안에 없으면 Track
+        // 공격 사거리 안에 없으면
         if (distance >= attackRange)
         {
             if (canTrack == true)
             {
                 Tracking();
             }
-            
+
         }
-        else // 공격 사거리 내에 들어오면 Attack
+        else // 공격 사거리 내에 들어오면
         {
             // 공격 가능 여부 체크 후 공격
             if (canAttack == true)
             {
-                // 공격 시 1.5초 동안 추적 해제
                 canTrack = false;
                 Invoke("EnableTracking", 1.5f);
-
-                // 공격 수행
                 canAttack = false;
                 Attack();
-            }
-        }
-
-        // [JUMP]
-        if (System.Math.Abs(target.transform.position.x - transform.position.x) <= 3.0f)
-        {
-            // 플레이어가 위에있으면 점프
-            if (System.Math.Abs(target.transform.position.y - transform.position.y) >= 1.0f && target.transform.position.y >= transform.position.y)
-            {
-                if (canTrack == true && canJump == true)
-                {
-                    canJump = false;
-                    Jump();
-                }
             }
         }
 
@@ -118,8 +111,10 @@ public class EnemyControl : MonoBehaviour
 
     void Tracking()
     {
-        // 타겟을 향해 이동 (X축)
-        this.transform.position = new Vector2(transform.position.x + ((target.transform.position - transform.position).normalized).x * moveSpeed * Time.deltaTime, transform.position.y);
+        Vector2 direction = (target.transform.position - transform.position).normalized;
+
+        // 타겟을 향해 이동 (X축, Y축)
+        this.transform.position = new Vector2(transform.position.x + direction.x * moveSpeed * Time.deltaTime, transform.position.y + direction.y * moveSpeed * Time.deltaTime);
     }
 
     void Attack()
@@ -128,15 +123,22 @@ public class EnemyControl : MonoBehaviour
         Invoke("EnableAttack", attackCoolTime);
     }
 
-    void Jump()
+    IEnumerator Skill_1()
     {
-        // 캐릭터가 땅에 닿아있을 때만 점프 가능
-        if (isGround == true)
-        {
-            rb.AddForce(Vector2.up * jumpPower, ForceMode2D.Impulse);
-        }
+        // 플레이어 위치로 돌진
+        Vector2 direction = (target.transform.position - transform.position).normalized;
 
-        Invoke("EnableJump", 2f);
+        // 이펙트 출력
+        GameObject chargeEffect = Instantiate(effectPrefab_charge, transform.position, transform.rotation);
+        chargeEffect.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+        Destroy(chargeEffect, 2.25f);
+
+        // 돌진
+        yield return new WaitForSeconds(1.5f);
+        chargeEffect.GetComponent<Rigidbody2D>().velocity = direction * skillSpeed;
+        rb.velocity = direction * skillSpeed;
+        yield return new WaitForSeconds(0.75f);
+        rb.velocity = Vector3.zero; // velocity 초기화
     }
 
     IEnumerator SlashEffect()
@@ -183,6 +185,7 @@ public class EnemyControl : MonoBehaviour
             // 충돌한 오브젝트 삭제
             Destroy(obj);
         }
+
     }
 
     void EnableTracking()
@@ -195,9 +198,8 @@ public class EnemyControl : MonoBehaviour
         canAttack = true;
     }
 
-    void EnableJump()
+    void EnableSkill()
     {
-        canJump = true;
+        canSkill = true;
     }
-
 }

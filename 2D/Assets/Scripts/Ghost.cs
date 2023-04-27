@@ -15,14 +15,14 @@ public class Ghost : MonoBehaviour
     private bool canSkill = true; // 스킬 사용 가능 여부 (false : 스킬 쿨타임중)
 
     private float moveSpeed = 4.5f; // 이동 속도
-    private float skillSpeed = 20.0f; // 스킬 사용시 속도
+    private float skillSpeed = 25.0f; // 스킬 사용시 속도
     private float attackRange = 1.5f; // 공격 사거리
     private float skillRange = 3.0f; // 스킬 사거리
     private float attackCoolTime = 1.5f; // 공격 쿨타임
 
-    public float life = 1000.0f; // 체력
+    private float life = 750.0f; // 체력
     private float life_max; // 최대체력
-    public float takeDamage = 10f; // 피격시 받는 데미지
+    private float takeDamage = 10f; // 피격시 받는 데미지
 
     // Attack Effect 프리팹
     public GameObject effectPrefab_slash;
@@ -64,11 +64,11 @@ public class Ghost : MonoBehaviour
             if (canSkill == true)
             {
                 canTrack = false;
-                Invoke("EnableTracking", 2.5f);
+                Invoke("EnableTracking", 2.0f);
                 canAttack = false;
-                Invoke("EnableAttack", 2.5f);
+                Invoke("EnableAttack", 1.5f);
                 canSkill = false;
-                Invoke("EnableSkill", 10.0f); // 스킬 쿨타임
+                Invoke("EnableSkill", 7.5f); // 스킬 쿨타임
 
                 StartCoroutine(Skill_1());
             }
@@ -131,13 +131,13 @@ public class Ghost : MonoBehaviour
         // 이펙트 출력
         GameObject chargeEffect = Instantiate(effectPrefab_charge, transform.position, transform.rotation);
         chargeEffect.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
-        Destroy(chargeEffect, 2.25f);
+        Destroy(chargeEffect, 1.5f);
 
         // 돌진
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(1.0f);
         chargeEffect.GetComponent<Rigidbody2D>().velocity = direction * skillSpeed;
         rb.velocity = direction * skillSpeed;
-        yield return new WaitForSeconds(0.75f);
+        yield return new WaitForSeconds(0.5f);
         rb.velocity = Vector3.zero; // velocity 초기화
     }
 

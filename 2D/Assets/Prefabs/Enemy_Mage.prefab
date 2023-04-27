@@ -98,7 +98,7 @@ GameObject:
   - component: {fileID: 1445121193553313620}
   - component: {fileID: 1445121193553313623}
   m_Layer: 8
-  m_Name: Enemy_Mage (Stage 3)
+  m_Name: Enemy_Mage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

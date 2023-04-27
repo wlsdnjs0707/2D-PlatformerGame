@@ -10,6 +10,9 @@ TagManager:
   - StageManager
   - HealthBar
   - GhostCharge
+  - Minion
+  - Magic
+  - Magic Missile
   layers:
   - Default
   - TransparentFX

@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class EnemyControl : MonoBehaviour
+public class Knight : MonoBehaviour
 {
     private Rigidbody2D rb;
     private GameObject target; // 추적할 타겟 (플레이어)
@@ -15,14 +15,14 @@ public class EnemyControl : MonoBehaviour
     private bool canAttack = true; // 공격 가능한 상태인가 (false : 공격중)
     private bool canJump = true; // 점프 가능한 상태인가 (false : 점프 쿨타임중)
 
-    public float moveSpeed = 5.0f; // 이동 속도
-    public float jumpPower = 25.0f; // 점프력
-    public float attackRange = 1.5f; // 공격 사거리
-    public float attackCoolTime = 1.5f; // 공격 쿨타임
+    private float moveSpeed = 5.0f; // 이동 속도
+    private float jumpPower = 25.0f; // 점프력
+    private float attackRange = 1.5f; // 공격 사거리
+    private float attackCoolTime = 1.5f; // 공격 쿨타임
 
-    public float life = 1000.0f; // 체력
+    private float life = 500.0f; // 체력
     private float life_max; // 최대체력
-    public float takeDamage = 10f; // 피격시 받는 데미지
+    private float takeDamage = 10f; // 피격시 받는 데미지
 
     // Attack Effect 프리팹
     public GameObject effectPrefab_slash;

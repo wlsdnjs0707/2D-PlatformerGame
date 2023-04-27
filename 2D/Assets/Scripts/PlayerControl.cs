@@ -147,10 +147,41 @@ public class PlayerControl : MonoBehaviour
                 Knockback(contactPoint, contactVector);
                 life -= 1;
                 Life_UI[life].SetActive(false);
+                Destroy(obj);
             }
-            
+
+            if (obj.tag == "Magic")
+            {
+                Knockback(contactPoint, contactVector);
+                life -= 1;
+                Life_UI[life].SetActive(false);
+            }
+
+            if (obj.tag == "Minion")
+            {
+                Knockback(contactPoint, contactVector);
+                life -= 1;
+                Life_UI[life].SetActive(false);
+                Destroy(obj);
+            }
+
             Invoke("EnableMovement", 0.3f);
             Invoke("DisableOnHit", hitCoolTime);
+        }
+
+        if (obj.tag == "Magic Missile")
+        {
+            if (onHit == false)
+            {
+                life -= 1;
+                Life_UI[life].SetActive(false);
+                Destroy(obj);
+            }
+            else
+            {
+                Destroy(obj);
+            }
+            
         }
     }
 

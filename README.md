@@ -24,68 +24,68 @@ bullet_rb.AddForce(Vector2.right * 10, ForceMode2D.Impulse);
 
   ### 1. 스테이지 1
   - 이동 (추적)
-```python
-this.transform.position = new Vector2(transform.position.x + ((target.transform.position - transform.position).normalized).x * moveSpeed * Time.deltaTime, transform.position.y);
-```
+   ```python
+   this.transform.position = new Vector2(transform.position.x + ((target.transform.position - transform.position).normalized).x * moveSpeed * Time.deltaTime, transform.position.y);
+   ```
   - 점프
   - 공격
-```python
-GameObject slashEffect = Instantiate(effectPrefab_slash, new Vector3(transform.position.x, transform.position.y, -3), transform.rotation);
-```
+   ```python
+   GameObject slashEffect = Instantiate(effectPrefab_slash, new Vector3(transform.position.x, transform.position.y, -3), transform.rotation);
+   ```
   
   ### 2. 스테이지 2
   - 이동 (추적)
   - 공격
   - 스킬 (돌진)
-```python
-IEnumerator Skill_1()
-{
-    Vector2 direction = (target.transform.position - transform.position).normalized;
+   ```python
+   IEnumerator Skill_1()
+   {
+       Vector2 direction = (target.transform.position - transform.position).normalized;
 
-    GameObject chargeEffect = Instantiate(effectPrefab_charge, transform.position, transform.rotation);
-    chargeEffect.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
-    Destroy(chargeEffect, 1.5f);
+       GameObject chargeEffect = Instantiate(effectPrefab_charge, transform.position, transform.rotation);
+       chargeEffect.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+       Destroy(chargeEffect, 1.5f);
 
-    yield return new WaitForSeconds(1.0f);
-    chargeEffect.GetComponent<Rigidbody2D>().velocity = direction * skillSpeed;
-    rb.velocity = direction * skillSpeed;
-    yield return new WaitForSeconds(0.5f);
-    rb.velocity = Vector3.zero; // velocity 초기화
-}
-```
+       yield return new WaitForSeconds(1.0f);
+       chargeEffect.GetComponent<Rigidbody2D>().velocity = direction * skillSpeed;
+       rb.velocity = direction * skillSpeed;
+       yield return new WaitForSeconds(0.5f);
+       rb.velocity = Vector3.zero; // velocity 초기화
+   }
+   ```
   
   ### 3. 스테이지 3
   - 이동 (추적)
   - 공격
   - 스킬1 (몬스터 소환)
-```python
-Instantiate(minionPrefab, new Vector3(transform.position.x, transform.position.y, transform.position.z), transform.rotation);
-```
+   ```python
+   Instantiate(minionPrefab, new Vector3(transform.position.x, transform.position.y, transform.position.z), transform.rotation);
+   ```
   - 스킬2 (탄환 발사)
-```python
-IEnumerator Skill_2()
-{
-    GameObject effect1 = Instantiate(skillPrefab_1, new Vector3(transform.position.x, transform.position.y, -3), transform.rotation);
-    effect1.transform.localScale = new Vector3(1.5f, 1.5f, 1.5f);
-    effect1.GetComponent<Rigidbody2D>().velocity = Vector2.up * 5.0f;
-    yield return new WaitForSeconds(1f);
-    effect1.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+   ```python
+   IEnumerator Skill_2()
+   {
+       GameObject effect1 = Instantiate(skillPrefab_1, new Vector3(transform.position.x, transform.position.y, -3), transform.rotation);
+       effect1.transform.localScale = new Vector3(1.5f, 1.5f, 1.5f);
+       effect1.GetComponent<Rigidbody2D>().velocity = Vector2.up * 5.0f;
+       yield return new WaitForSeconds(1f);
+       effect1.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
 
-    for (int i = 0;i < 10;i++)
-    {
-        Vector2 direction = (target.transform.position - effect1.transform.position).normalized;
+       for (int i = 0;i < 10;i++)
+       {
+           Vector2 direction = (target.transform.position - effect1.transform.position).normalized;
 
-        GameObject effect2 = Instantiate(skillPrefab_2, effect1.transform.position, Quaternion.AngleAxis((Mathf.Atan2(direction.y, direction.x) + 100) * Mathf.Rad2Deg, Vector3.forward));
+           GameObject effect2 = Instantiate(skillPrefab_2, effect1.transform.position, Quaternion.AngleAxis((Mathf.Atan2(direction.y, direction.x) + 100) * Mathf.Rad2Deg, Vector3.forward));
 
-        effect2.GetComponent<Rigidbody2D>().velocity = direction * 10.0f;
-        effect2.transform.localScale = new Vector3(0.75f, 0.75f, 0.75f);
-        Destroy(effect2, 30.0f);
-        yield return new WaitForSeconds(1f);
-    }
-    Destroy(effect1);
-    StartCoroutine(EnableSkill(2, 10.0f));
-}
-```
+           effect2.GetComponent<Rigidbody2D>().velocity = direction * 10.0f;
+           effect2.transform.localScale = new Vector3(0.75f, 0.75f, 0.75f);
+           Destroy(effect2, 30.0f);
+           yield return new WaitForSeconds(1f);
+       }
+       Destroy(effect1);
+       StartCoroutine(EnableSkill(2, 10.0f));
+   }
+   ```
 
 ## - 문제 해결
    - AddForce 적용 안됨 -> AddForce 사용 시점에 Rigidbody의 Velocity를 초기화해야 작동.

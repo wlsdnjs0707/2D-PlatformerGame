@@ -32,6 +32,7 @@ bullet_rb.AddForce(Vector2.right * 10, ForceMode2D.Impulse);
    ```python
    GameObject slashEffect = Instantiate(effectPrefab_slash, new Vector3(transform.position.x, transform.position.y, -3), transform.rotation);
    ```
+   <br/>
   
   ### 2. 스테이지 2
   - 이동 (추적)
@@ -53,6 +54,7 @@ bullet_rb.AddForce(Vector2.right * 10, ForceMode2D.Impulse);
        rb.velocity = Vector3.zero; // velocity 초기화
    }
    ```
+   <br/>
   
   ### 3. 스테이지 3
   - 이동 (추적)
@@ -86,6 +88,7 @@ bullet_rb.AddForce(Vector2.right * 10, ForceMode2D.Impulse);
        StartCoroutine(EnableSkill(2, 10.0f));
    }
    ```
+   <br/>
 
 ## - 문제 해결
    - AddForce 적용 안됨 -> AddForce 사용 시점에 Rigidbody의 Velocity를 초기화해야 작동.

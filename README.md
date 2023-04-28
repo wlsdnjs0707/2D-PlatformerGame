@@ -2,7 +2,7 @@
 <br/>
 
 ## - 플레이어 조작
-<img src="https://user-images.githubusercontent.com/86781939/235141631-4cfe7876-e484-47be-b238-da2f02a6e0e5.png"  width="1200" height="540" > <img src="https://user-images.githubusercontent.com/86781939/235142481-63facdec-1818-40e6-a292-2f4d3e446b8c.png"  width="1200" height="540" >
+<img src="https://user-images.githubusercontent.com/86781939/235141631-4cfe7876-e484-47be-b238-da2f02a6e0e5.png"  width="1200" height="480" > <img src="https://user-images.githubusercontent.com/86781939/235142481-63facdec-1818-40e6-a292-2f4d3e446b8c.png"  width="1200" height="480" >
 
    1. 조이스틱 이동
 ```python
@@ -21,7 +21,7 @@ bullet_rb.AddForce(Vector2.right * 10, ForceMode2D.Impulse);
 <br/>
 
 ## - 스테이지 1
-<img src="https://user-images.githubusercontent.com/86781939/235149247-28f17a67-6303-46f4-bede-973054d1e373.gif"  width="1200" height="540" >
+<img src="https://user-images.githubusercontent.com/86781939/235149247-28f17a67-6303-46f4-bede-973054d1e373.gif"  width="1200" height="480" >
 
    1. 이동 (플레이어 추적)
 ```python
@@ -39,7 +39,7 @@ GameObject slashEffect = Instantiate(effectPrefab_slash, new Vector3(transform.p
    2. 공격
    3. 스킬 (돌진)
  
-<img src="https://user-images.githubusercontent.com/86781939/235149610-9aee0478-9a92-4ddc-991f-a0ba23ca8074.gif"  width="1200" height="540" >
+<img src="https://user-images.githubusercontent.com/86781939/235149610-9aee0478-9a92-4ddc-991f-a0ba23ca8074.gif"  width="1200" height="480" >
 
 ```python
 IEnumerator Skill_1()
@@ -64,7 +64,7 @@ IEnumerator Skill_1()
    2. 공격
    3. 스킬1 (몬스터 소환)
  
-<img src="https://user-images.githubusercontent.com/86781939/235149760-496e4150-dffd-4361-9c2e-1db68f594753.gif"  width="1200" height="540" >
+<img src="https://user-images.githubusercontent.com/86781939/235149760-496e4150-dffd-4361-9c2e-1db68f594753.gif"  width="1200" height="480" >
 
 ```python
 Instantiate(minionPrefab, new Vector3(transform.position.x, transform.position.y, transform.position.z), transform.rotation);
@@ -72,7 +72,7 @@ Instantiate(minionPrefab, new Vector3(transform.position.x, transform.position.y
 
    4. 스킬2 (탄환 발사)
  
-<img src="https://user-images.githubusercontent.com/86781939/235149767-4f003875-13fe-4682-adf2-7c2e92359de3.gif"  width="1200" height="540" >
+<img src="https://user-images.githubusercontent.com/86781939/235149767-4f003875-13fe-4682-adf2-7c2e92359de3.gif"  width="1200" height="480" >
 
 ```python
 IEnumerator Skill_2()

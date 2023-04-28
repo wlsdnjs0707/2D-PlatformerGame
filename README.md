@@ -38,7 +38,9 @@ GameObject slashEffect = Instantiate(effectPrefab_slash, new Vector3(transform.p
    1. 이동 (플레이어 추적)
    2. 공격
    3. 스킬 (돌진)
+ 
 <img src="https://user-images.githubusercontent.com/86781939/235149610-9aee0478-9a92-4ddc-991f-a0ba23ca8074.gif"  width="1200" height="540" >
+
 ```python
 IEnumerator Skill_1()
 {
@@ -61,12 +63,17 @@ IEnumerator Skill_1()
    1. 이동 (플레이어 추적)
    2. 공격
    3. 스킬1 (몬스터 소환)
+ 
 <img src="https://user-images.githubusercontent.com/86781939/235149760-496e4150-dffd-4361-9c2e-1db68f594753.gif"  width="1200" height="540" >
+
 ```python
 Instantiate(minionPrefab, new Vector3(transform.position.x, transform.position.y, transform.position.z), transform.rotation);
 ```
+
    4. 스킬2 (탄환 발사)
+ 
 <img src="https://user-images.githubusercontent.com/86781939/235149767-4f003875-13fe-4682-adf2-7c2e92359de3.gif"  width="1200" height="540" >
+
 ```python
 IEnumerator Skill_2()
 {

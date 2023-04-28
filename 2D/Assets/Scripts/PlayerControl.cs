@@ -11,10 +11,12 @@ public class PlayerControl : MonoBehaviour
     public FixedJoystick joy; // 조이스틱 팩
     public Button jumpButton; // 점프 버튼 (A)
     public Button shotButton; // 공격 버튼 (B)
+
+    // UI
     public GameObject[] Life_UI; // 라이프 UI (하트)
+    public GameObject GameOverUI;
 
-    private Rigidbody2D rb;
-
+    // Prefab
     public GameObject bulletPrefab; // bullet 프리팹
 
     // 땅 레이어
@@ -22,6 +24,7 @@ public class PlayerControl : MonoBehaviour
     private LayerMask groundLayer;
 
     // 플레이어 속성
+    private Rigidbody2D rb;
     public float playerSpeed = 5f; // 이동 속도
     public float jumpPower = 25.0f; // 점프력
     private bool isGround = true; // 땅 밟고있는지 확인
@@ -69,11 +72,11 @@ public class PlayerControl : MonoBehaviour
         // Life 소진시 게임 종료
         if (life < 1)
         {
-            // (임시)
             Time.timeScale = 0;
-            canMove = false;
-            jumpButton.enabled = false;
-            shotButton.enabled = false;
+            //canMove = false;
+            //jumpButton.enabled = false;
+            //shotButton.enabled = false;
+            GameOverUI.SetActive(true);
         }
         
     }
@@ -131,12 +134,10 @@ public class PlayerControl : MonoBehaviour
 
         if (onHit == false)
         {
-            // 피격 후 이동 불가, 무적 상태
-            canMove = false;
-            onHit = true;
-
             if (obj.tag == "Slash")
             {
+                canMove = false;
+                onHit = true;
                 Knockback(contactPoint, contactVector);
                 life -= 1;
                 Life_UI[life].SetActive(false);
@@ -144,6 +145,8 @@ public class PlayerControl : MonoBehaviour
 
             if (obj.tag == "GhostCharge")
             {
+                canMove = false;
+                onHit = true;
                 Knockback(contactPoint, contactVector);
                 life -= 1;
                 Life_UI[life].SetActive(false);
@@ -152,6 +155,8 @@ public class PlayerControl : MonoBehaviour
 
             if (obj.tag == "Magic")
             {
+                canMove = false;
+                onHit = true;
                 Knockback(contactPoint, contactVector);
                 life -= 1;
                 Life_UI[life].SetActive(false);
@@ -159,6 +164,8 @@ public class PlayerControl : MonoBehaviour
 
             if (obj.tag == "Minion")
             {
+                canMove = false;
+                onHit = true;
                 Knockback(contactPoint, contactVector);
                 life -= 1;
                 Life_UI[life].SetActive(false);

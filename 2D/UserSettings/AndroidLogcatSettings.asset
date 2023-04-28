@@ -1,5 +1,5 @@
 {
-    "m_SelectedDeviceId": "",
+    "m_SelectedDeviceId": "R3CR312KJBY",
     "m_SelectedPackage": {
         "deviceId": "",
         "name": "",
@@ -7,7 +7,26 @@
         "exited": false
     },
     "m_SelectedPriority": 0,
-    "m_KnownPackagesForSerialization": [],
+    "m_KnownPackagesForSerialization": [
+        {
+            "deviceId": "R3CR312KJBY",
+            "name": "com.DefaultCompany.com.unity.template.mobile2D",
+            "processId": 1837,
+            "exited": true
+        },
+        {
+            "deviceId": "R3CR312KJBY",
+            "name": "com.DefaultCompany.com.unity.template.mobile2D",
+            "processId": 4862,
+            "exited": true
+        },
+        {
+            "deviceId": "R3CR312KJBY",
+            "name": "com.DefaultCompany.com.unity.template.mobile2D",
+            "processId": 6020,
+            "exited": true
+        }
+    ],
     "m_Tags": {
         "m_Entries": [
             {
@@ -41,9 +60,20 @@
         ]
     },
     "m_MemoryViewerState": {
-        "MemoryWindowHeight": 0.0,
-        "MemoryWindowWidth": 0.0,
-        "MemoryTypeEnabled": [],
+        "MemoryWindowHeight": 300.0,
+        "MemoryWindowWidth": 170.0,
+        "MemoryTypeEnabled": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true
+        ],
         "MemoryGroup": 2,
         "Behavior": 0
     },

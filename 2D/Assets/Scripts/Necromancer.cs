@@ -21,7 +21,7 @@ public class Necromancer : MonoBehaviour
     private float attackRange = 2.0f; // 공격 사거리
     private float attackCoolTime = 2.5f; // 공격 쿨타임
 
-    private float life = 1000.0f; // 체력
+    private float life = 700.0f; // 체력
     private float life_max; // 최대체력
     private float takeDamage = 10f; // 피격시 받는 데미지
 
@@ -152,7 +152,7 @@ public class Necromancer : MonoBehaviour
 
         for (int i = 0;i < 10;i++)
         {
-            // 플레이어 위치로 돌진
+            // 플레이어 위치로 발사
             Vector2 direction = (target.transform.position - effect1.transform.position).normalized;
 
             GameObject effect2 = Instantiate(skillPrefab_2, effect1.transform.position, Quaternion.AngleAxis((Mathf.Atan2(direction.y, direction.x) + 100) * Mathf.Rad2Deg, Vector3.forward));

@@ -3,14 +3,17 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using UnityEngine.UIElements;
 
 public class StageControl : MonoBehaviour
 {
     // UI
     public TMP_Text stageText;
     public GameObject winText;
+    public Button restartButton; // 재시작 버튼
+    public GameObject gameoverUI;
+    public GameObject winUI;
 
     // 현재 스테이지
     private int currentStage = 0;
@@ -25,6 +28,7 @@ public class StageControl : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        restartButton.onClick.AddListener(Restart);
         SetNextStage();
         StartCoroutine(UpdateText());
     }
@@ -35,12 +39,20 @@ public class StageControl : MonoBehaviour
         
     }
 
+    void Restart()
+    {
+        gameoverUI.SetActive(false);
+        Time.timeScale = 1.0f;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
     public void SetNextStage()
     {
         // 마지막 적인지 확인
         if (currentStage == Enemy.Length)
         {
             Time.timeScale = 0;
+            winUI.SetActive(true);
             return;
         }
 

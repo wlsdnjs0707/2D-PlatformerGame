@@ -20,7 +20,7 @@ public class Ghost : MonoBehaviour
     private float skillRange = 3.0f; // 스킬 사거리
     private float attackCoolTime = 1.5f; // 공격 쿨타임
 
-    private float life = 750.0f; // 체력
+    private float life = 600.0f; // 체력
     private float life_max; // 최대체력
     private float takeDamage = 10f; // 피격시 받는 데미지
 

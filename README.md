@@ -25,38 +25,38 @@ bullet_rb.AddForce(Vector2.right * 10, ForceMode2D.Impulse);
   ### 1. 스테이지 1
   <img src="https://user-images.githubusercontent.com/86781939/235149247-28f17a67-6303-46f4-bede-973054d1e373.gif"  width="1200" height="540" >
   - 이동 (추적)
-   ```python
+  ```python
    this.transform.position = new Vector2(transform.position.x + ((target.transform.position - transform.position).normalized).x * moveSpeed * Time.deltaTime, transform.position.y);
-   ```
+  ```
   - 점프
   - 공격
-   ```python
+  ```python
    GameObject slashEffect = Instantiate(effectPrefab_slash, new Vector3(transform.position.x, transform.position.y, -3), transform.rotation);
-   ```
-   <br/>
+  ```
+  <br/>
   
   ### 2. 스테이지 2
   - 이동 (추적)
   - 공격
   - 스킬 (돌진)
   <img src="https://user-images.githubusercontent.com/86781939/235149610-9aee0478-9a92-4ddc-991f-a0ba23ca8074.gif"  width="1200" height="540" >
-   ```python
-   IEnumerator Skill_1()
-   {
-       Vector2 direction = (target.transform.position - transform.position).normalized;
+  ```python
+  IEnumerator Skill_1()
+  {
+      Vector2 direction = (target.transform.position - transform.position).normalized;
 
-       GameObject chargeEffect = Instantiate(effectPrefab_charge, transform.position, transform.rotation);
-       chargeEffect.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
-       Destroy(chargeEffect, 1.5f);
+      GameObject chargeEffect = Instantiate(effectPrefab_charge, transform.position, transform.rotation);
+      chargeEffect.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+      Destroy(chargeEffect, 1.5f);
 
-       yield return new WaitForSeconds(1.0f);
-       chargeEffect.GetComponent<Rigidbody2D>().velocity = direction * skillSpeed;
-       rb.velocity = direction * skillSpeed;
-       yield return new WaitForSeconds(0.5f);
-       rb.velocity = Vector3.zero; // velocity 초기화
-   }
-   ```
-   <br/>
+      yield return new WaitForSeconds(1.0f);
+      chargeEffect.GetComponent<Rigidbody2D>().velocity = direction * skillSpeed;
+      rb.velocity = direction * skillSpeed;
+      yield return new WaitForSeconds(0.5f);
+      rb.velocity = Vector3.zero; // velocity 초기화
+  }
+  ```
+  <br/>
   
   ### 3. 스테이지 3
   - 이동 (추적)

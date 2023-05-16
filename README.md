@@ -100,6 +100,13 @@ IEnumerator Skill_2()
 ```
 <br/>
 
+## - 적 피격
+<img src="https://github.com/wlsdnjs0707/2D-PlatformerGame/assets/86781939/707d5f0c-35c8-4e92-9f03-935dfaedbe06"  width="1200" height="480" >
+   - 적 캐릭터의 체력이 화면 상단 UI에 표시
+   - 적 피격 시 적 캐릭터의 체력이 감소하고 0이 되면 
+
+
+<br/>
 ## - 문제 해결
    - AddForce 적용 안됨 -> AddForce 사용 시점에 Rigidbody의 Velocity를 초기화해야 작동.
    - 오브젝트간 충돌 발생 -> 레이어 만들어 프로젝트 세팅에서 특정 레이어간 충돌 비활성화
